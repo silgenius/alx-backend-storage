@@ -32,3 +32,38 @@ class Cache:
         data_key = str(uuid.uuid4())
         self._redis.mset({data_key: data})
         return data_key
+
+    def get(self, key: str, fn = None):
+        """
+        Retrieves the value associated with the specified key from the
+        Redis database. If the key does not exist, it returns `None`.
+        If a callable function `fn` is provided, it will be applied
+        to the retrieved data to convert it back to the desired format.
+        """
+
+        data = self._redis.get(key)
+        if not data:
+            return None
+
+        if fn:
+            return fn(data)
+        return data
+
+    def get_str(self, key):
+        """
+        Retrieves the value associated with the specified
+        key as a UTF-8 string.
+        """
+        data = self._redis.get(key)
+        if not data:
+            return None
+        return data.decode("utf-8")
+
+    def get_int(self, key):
+        """
+        Retrieves the value associated with the specified key as an integer.
+        """
+        data = self._redis.get(key)
+        if not data:
+            return None
+        return int(data)
