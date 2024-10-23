@@ -9,20 +9,25 @@ def top_students(mongo_collection):
     """
     a Python function that returns all students sorted by average score
     """
-    results = mongo_collection.find({})
-    students = []
-    for result in results:
-        student = {}
-        student_score = 0
-        print(result)
-        topics = result.get("topics")
-        for score in topics:
-            student_score += score.get("score") or 0
-        avg_score = student_score / len(topics)
-        student['name'] = result.get("name")
-        student['_id'] = result.get("_id")
-        student['averageScore'] = avg_score
-        students.append(student)
-    students = sorted(students, key=lambda x: x['averageScore'], reverse=True)
+    students = mongo_collection.find()
+    
+    result = []
+    
+    for student in students:
+        # Calculate average score
+        scores = [topic['score'] for topic in student.get('topics', [])]
+        average_score = sum(scores) / len(scores) if scores else 0
+        
+        # Add to result with the average score
+        student_data = {
+            '_id': student['_id'],
+            'name': student['name'],
+            'averageScore': average_score
+        }
+        result.append(student_data)
+    
+    # Sort students by average score in descending order
+    result.sort(key=lambda x: x['averageScore'], reverse=True)
+    
+    return result
 
-    return students
