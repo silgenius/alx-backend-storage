@@ -9,12 +9,12 @@ unique key generated for each entry.
 from functools import wraps
 import redis
 import uuid
-from typing import Union
+from typing import Union, Optional, Callable
 
 
-def count_calls(f):
+def count_calls(f: Callable) -> Callable:
     """
-    wrapper functio
+    Decorator to count the number of times a method is called.
     """
     @wraps(f)
     def wrapper(self, *args, **kwargs):
