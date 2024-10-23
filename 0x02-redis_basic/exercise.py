@@ -28,6 +28,23 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
+def call_history(method: Callable) -> Callable:
+    """
+    Decorator to keep track of history
+    """
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """
+        append input arguemant and output result to a list
+        """
+        key = method.__qualname__
+        self._redis.rpush(f'{key}:inputs', str(args))
+        result = method(self, *args, **kwargs)
+        self._redis.rpush(f'{key}:outputs', result)
+        return result
+    return wrapper
+
+
 class Cache:
     """
     The `Cache` class is responsible for managing a Redis connection
@@ -41,6 +58,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
