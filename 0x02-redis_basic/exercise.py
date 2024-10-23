@@ -33,7 +33,7 @@ class Cache:
         self._redis.mset({data_key: data})
         return data_key
 
-    def get(self, key: str, fn = None):
+    def get(self, key: str, fn=None):
         """
         Retrieves the value associated with the specified key from the
         Redis database. If the key does not exist, it returns `None`.
