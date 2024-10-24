@@ -103,3 +103,16 @@ class Cache:
         if not data:
             return None
         return int(data)
+
+
+def replay(cache):
+    server = redis.Redis()
+    inputs = server.lrange(f'{cache.__qualname__}:inputs', 0, -1)
+    outputs = server.lrange(f'{cache.__qualname__}:outputs', 0, -1)
+    count = len(inputs)
+    print(f'{cache.__qualname__} was called {count} times:')
+    zipped = list(zip(inputs, outputs))
+    for data in zipped:
+        In, Out = data
+        print(f'{cache.__qualname__}(*{In.decode("utf-8")}) -> {Out.decode("utf-8")}')
+
