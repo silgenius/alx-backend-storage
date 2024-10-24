@@ -15,6 +15,7 @@ import redis
 server = redis.Redis()
 server.flushdb()
 
+
 def count_url(method):
     """
     Decorator that counts the number of times a URL is requested.
