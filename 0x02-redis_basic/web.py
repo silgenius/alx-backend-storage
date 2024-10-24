@@ -13,7 +13,7 @@ import redis
 
 # Setup Redis server
 server = redis.Redis()
-
+server.flushdb()
 
 def count_url(method):
     """
@@ -27,6 +27,7 @@ def count_url(method):
     """
     @wraps(method)
     def wrapper(url):
+        url = str(url)
         server.incr(f'count:{url}')
         result = server.get(f'result:{url}')
         if result:

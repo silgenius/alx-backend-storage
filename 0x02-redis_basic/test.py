@@ -3,8 +3,15 @@
 
 """main test"""
 
+import time
+import redis
+
+
 get_page = __import__('web').get_page
 
-url = 'http://slowwly.robertomurray.co.uk'
-server = get_page('http://slowwly.robertomurray.co.uk')
-print(server)
+url = 'http://google.com'
+server = get_page(url)
+server = get_page(url)
+print(f"\n __________")
+server = redis.Redis()
+print(server.get(f'count:{url}'))
