@@ -15,23 +15,23 @@ import redis
 server = redis.Redis()
 
 
-def count_url(fn):
+def count_url(method):
     """
     Decorator that counts the number of times a URL is requested.
 
     Args:
-        fn: The function to be wrapped.
+        method: The function to be wrapped.
 
     Returns:
         Wrapper function that increments the URL count in Redis.
     """
-    @wraps(fn)
+    @wraps(method)
     def wrapper(*args, **kwargs):
         url = str(args[0])
         key = f'count:{url}'
         server.incr(key)
         server.expire(key, 10)
-        return fn(*args, **kwargs)
+        return method(*args, **kwargs)
     return wrapper
 
 
