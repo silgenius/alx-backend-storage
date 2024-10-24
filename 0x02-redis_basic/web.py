@@ -31,7 +31,6 @@ def count_url(method):
         result = server.get(f'result:{url}')
         if result:
             return result.decode("utf-8")
-        server.set(f'count:{url}', 0)
         server.setex(f'result:{url}', 10, method(url))
         return method(url)
     return wrapper
