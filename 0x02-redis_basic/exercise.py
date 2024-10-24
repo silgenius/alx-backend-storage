@@ -106,6 +106,10 @@ class Cache:
 
 
 def replay(cache):
+    """
+    a replay function to display the history of
+    calls of a particular function.
+    """
     server = redis.Redis()
     inputs = server.lrange(f'{cache.__qualname__}:inputs', 0, -1)
     outputs = server.lrange(f'{cache.__qualname__}:outputs', 0, -1)
@@ -114,5 +118,5 @@ def replay(cache):
     zipped = list(zip(inputs, outputs))
     for data in zipped:
         In, Out = data
-        print(f'{cache.__qualname__}(*{In.decode("utf-8")}) -> {Out.decode("utf-8")}')
-
+        print(f'{cache.__qualname__}(*{In.decode("utf-8")}) \
+-> {Out.decode("utf-8")}')
